@@ -57,7 +57,7 @@ const validateSignup = [
 
 
 // NEW ROUTE SIGNUP ENDPOINT
-router.post('', validateSignup, async (req, res) => {
+router.post('/', validateSignup, async (req, res) => {
 
   const { firstName, lastName, email, username, password } = req.body;
 
