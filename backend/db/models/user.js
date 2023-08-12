@@ -1,43 +1,64 @@
-"use strict";
-const { Model, Validator } = require("sequelize");
+'use strict';
+const { Model, Validator } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
-    static associate(models) {
-      User.hasMany(models.Spot, {
-        as: 'owner',
-        foreignKey: 'ownerId'
-      });
-      User.hasMany(models.Review, {
-        foreignKey: 'userId'
-      });
-      User.hasMany(models.Booking, {
-        foreignKey: 'userId'
-      });
+    toSafeObject() {
+      const { id, firstName, lastName, email, username } = this; // context will be the User instance
+      // console.log('firstName:', firstName);
+      // console.log('lastName:', lastName);
+      return { id, firstName, lastName, email, username };
     }
-  }
+    static associate(models) {
+      this.hasMany(models.Spot, { foreignKey: 'ownerId', as: 'spots' });
+      this.hasMany(models.Booking, { foreignKey: 'userId', as: 'bookings' });
+      this.hasMany(models.Review, { foreignKey: 'userId', as: 'reviews' });
+    }
+  };
 
   User.init(
     {
-      firstName: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      lastName: {
-        type: DataTypes.STRING,
-        allowNull: false,
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
       },
       username: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          len: [4, 30],
+          len: [2, 30],
+          notEmpty: true,
           isNotEmail(value) {
             if (Validator.isEmail(value)) {
               throw new Error("Cannot be an email.");
             }
-          },
-        },
+          }
+        }
+      },
+      firstName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          len: [2, 60],
+          is: ["^[a-z]+$",'i'], //only allows letters
+          notEmpty: {
+            args: true,
+            msg: 'First Name cannot be empty or contain only whitespace'
+          }
+        }
+      },
+      lastName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          len: [2, 60],
+          is: ["^[a-z]+$",'i'], //only allows letters
+          notEmpty: {
+            args: true,
+            msg: 'Last Name cannot be empty or contain only whitespace'
+          }
+        }
       },
       email: {
         type: DataTypes.STRING,
@@ -45,24 +66,31 @@ module.exports = (sequelize, DataTypes) => {
         validate: {
           len: [3, 256],
           isEmail: true,
-        },
+          notEmpty: true,
+        }
       },
       hashedPassword: {
         type: DataTypes.STRING.BINARY,
         allowNull: false,
         validate: {
           len: [60, 60],
-        },
+          notEmpty: true,
+        }
       },
     },
     {
       sequelize,
-      modelName: "User",
+      modelName: 'User',
       defaultScope: {
         attributes: {
-          exclude: ["hashedPassword", "email", "createdAt", "updatedAt"],
-        },
+          exclude: ['hashedPassword', 'createdAt', 'updatedAt']
+        }
       },
+      scopes: {
+        withFullName: {
+          attributes: ['id', 'firstName', 'lastName', 'email', 'username']
+        }
+      }
     }
   );
   return User;

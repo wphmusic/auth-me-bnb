@@ -1,11 +1,14 @@
 {
-  "name": "auth-me",
+  "dependencies": {
+    "express-validator": "^7.0.1",
+    "moment": "^2.29.4"
+  },
+  "name": "airbnb",
   "version": "1.0.0",
-  "description": "New_auth_me",
   "main": "index.js",
   "scripts": {
     "install": "npm --prefix backend install backend",
-    "dev:backend": "npm install --prefix backend start",
+    "dev:backend": "npm --prefix backend start",
     "sequelize": "npm run --prefix backend sequelize",
     "sequelize-cli": "npm run --prefix backend sequelize-cli",
     "start": "npm start --prefix backend",
@@ -13,17 +16,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wphmusic/FebCohortAirBNB.git"
+    "url": "git+https://github.com/samanarana/AirBnB.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/wphmusic/FebCohortAirBNB/issues"
+    "url": "https://github.com/samanarana/AirBnB/issues"
   },
-  "homepage": "https://github.com/wphmusic/FebCohortAirBNB#readme",
-  "dependencies": {
-    "mysql2": "^3.6.0",
-    "sequelize": "^6.32.1"
-  }
+  "homepage": "https://github.com/samanarana/AirBnB#readme",
+  "description": ""
 }

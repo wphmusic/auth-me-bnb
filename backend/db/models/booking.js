@@ -1,50 +1,59 @@
-"use strict";
-const { Model } = require("sequelize");
+'use strict';
+
+const moment = require('moment');
+
+const {
+  Model
+} = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Booking extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
     static associate(models) {
-      Booking.belongsTo(models.User, {
-        foreignKey: "userId",
-      });
-      Booking.belongsTo(models.Spot, {
-        foreignKey: "spotId",
-      });
+      this.belongsTo(models.Spot, { foreignKey: 'spotId', as: 'Spot' });
+      this.belongsTo(models.User, { foreignKey: 'userId', as: 'User' });
     }
   }
-  Booking.init(
-    {
-      startDate: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        validate: {
-          isDate: true,
-        }
-      },
-      endDate: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        validate: {
-          isDate: true,
-          isAfterStartDate(value) {
-            if (value <= this.startDate) {
-              throw new Error('End date must be after start date');
-            }
-          }
-        }
-      },
-      userId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      spotId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
+  Booking.init({
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    spotId: DataTypes.INTEGER,
+    userId: DataTypes.INTEGER,
+    startDate: {
+      type: DataTypes.STRING,
+      validate: {
+        notEmpty: true,
       },
     },
-    {
-      sequelize,
-      modelName: "Booking",
-    }
-  );
+    endDate: {
+      type: DataTypes.STRING,
+      validate: {
+        notEmpty: true,
+      },
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+      get() {
+        return moment(this.getDataValue('createdAt')).format('YYYY-MM-DD HH:mm:ss')
+      },
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+      get() {
+        return moment(this.getDataValue('updatedAt')).format('YYYY-MM-DD HH:mm:ss')
+      },
+    },
+  }, {
+    sequelize,
+    modelName: 'Booking',
+  });
   return Booking;
 };
