@@ -7,7 +7,7 @@ const { restoreUser, requireAuth } = require('../../utils/auth');
 
 
 // ROUTE FOR GETTING ALL REVIEWS BY A CURRENT USER
-router.get('/current', restoreUser, requireAuth, async (req, res) => {
+router.get('/current', restoreUser, async (req, res) => {
     const userId = req.user.id; // Extract userId from the request parameters
 
     // Find all reviews by this user
