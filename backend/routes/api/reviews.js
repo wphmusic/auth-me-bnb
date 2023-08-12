@@ -2,7 +2,7 @@ const express = require("express");
 
 const { requireAuth } = require("../../utils/auth");
 const { validateReviewBody } = require("../../utils/validation");
-const { User, Booking, Spot, Review, Image, sequelize } = require("../../db/models");
+const { User, Spot, Review, Image, sequelize } = require("../../db/models");
 const { prettifyDateTime } = require("../../utils/helpers");
 
 const router = express.Router();

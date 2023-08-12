@@ -3,7 +3,7 @@ const { Op } = require("sequelize");
 
 const { requireAuth } = require("../../utils/auth");
 const { validateBookingBody } = require("../../utils/validation");
-const { User, Booking, Spot, Review, Image, sequelize } = require("../../db/models");
+const { Booking, Spot, Image} = require("../../db/models");
 const { prettifyDateTime, prettifyStartEnd } = require("../../utils/helpers");
 
 const router = express.Router();
