@@ -1,8 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const { Review, ReviewImage, Spot, User } = require('../../db/models');
-const { check } = require('express-validator');
-const { handleValidationErrors } = require('../../utils/validation');
 const { restoreUser, requireAuth } = require('../../utils/auth');
 
 

@@ -10,7 +10,7 @@ const moment = require('moment');
 
 
 // ROUTE TO ADD AN IMAGE TO A SPOT BASED ON THE SPOT ID
-router.post('/:spotId/images', restoreUser, requireAuth, async (req, res, next) => {
+router.post('/:spotId/images', restoreUser, requireAuth, async (req, res) => {
     const { url, preview } = req.body;
     const spotId = req.params.spotId;  // It should be spotId
     const userId = req.user.id;

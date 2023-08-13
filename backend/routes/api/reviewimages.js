@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const { Review, ReviewImage } = require('../../db/models');
 const { restoreUser, requireAuth } = require('../../utils/auth');
-const { Op } = require('sequelize');
 
 // DELETE A REVIEW IMAGE ROUTE
 router.delete('/:imageId', restoreUser, requireAuth, async (req, res) => {

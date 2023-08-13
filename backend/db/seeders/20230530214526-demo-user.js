@@ -32,7 +32,7 @@ const userData = [
 ];
 
 module.exports = {
-  up: async (queryInterface, Sequelize) => {
+  up: async (queryInterface) => {
     return queryInterface.bulkInsert('Users', userData);
   },
 

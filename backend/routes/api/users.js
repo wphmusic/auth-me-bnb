@@ -32,7 +32,7 @@ const validateSignup = [
 
 
 //NEW ROUTE - GET THE CURRENT USER
-  router.get('/current', restoreUser, async (req, res) => {
+  router.get('/currentUser', restoreUser, async (req, res) => {
     const id = req.userId;
 
     let user = await User.findOne({ where: { id: id } })
