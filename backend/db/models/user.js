@@ -1,12 +1,10 @@
 'use strict';
-const { Model, Validator } = require('sequelize');
+const { Model} = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     toSafeObject() {
-      const { id, firstName, lastName, email, username } = this; // context will be the User instance
-      // console.log('firstName:', firstName);
-      // console.log('lastName:', lastName);
+      const { id, firstName, lastName, email, username } = this;
       return { id, firstName, lastName, email, username };
     }
     static associate(models) {
