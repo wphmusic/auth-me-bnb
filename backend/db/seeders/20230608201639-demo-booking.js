@@ -1,15 +1,16 @@
 'use strict';
 
-let options = {};
-if (process.env.NODE_ENV === 'production') {
-  options.schema = process.env.SCHEMA;  // define your schema in options object
-}
-
-/** @type {import('sequelize-cli').Migration} */
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    options.tableName = "Bookings";
-    return queryInterface.bulkInsert(options, [
+    const options = {
+      tableName: 'Bookings',
+    };
+
+    if (process.env.NODE_ENV === 'production') {
+      options.schema = process.env.SCHEMA; // Define your schema in options object
+    }
+
+    const bookingsData = [
       {
         spotId: 1,
         userId: 1,
@@ -27,12 +28,17 @@ module.exports = {
         userId: 1,
         startDate: '2023-07-01',
         endDate: '2023-07-10',
-      }
-    ], {});
+      },
+    ];
+
+    return queryInterface.bulkInsert(options.tableName, bookingsData, {});
   },
 
   down: async (queryInterface, Sequelize) => {
-    options.tableName = "Bookings";
-    return queryInterface.bulkDelete(options, null, {});
-  }
+    const options = {
+      tableName: 'Bookings',
+    };
+
+    return queryInterface.bulkDelete(options.tableName, null, {});
+  },
 };
