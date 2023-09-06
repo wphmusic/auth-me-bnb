@@ -1,5 +1,3 @@
-//backend/routes/api/session.js
-
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const { check } = require('express-validator');
@@ -10,7 +8,7 @@ const { User } = require('../../db/models');
 
 const router = express.Router();
 
-
+// Validation middleware for login
 const validateLogin = [
   check('credential')
     .exists({ checkFalsy: true })
@@ -22,81 +20,66 @@ const validateLogin = [
   handleValidationErrors
 ];
 
-
-// ROUTE TO LOGIN
+// Login route
 router.post('', validateLogin, async (req, res) => {
   const { credential, password } = req.body;
 
   if (!credential || !password) {
     return res.status(400).json({
-      message: "Bad Request",
+      message: 'Bad Request',
       errors: {
-        "credential": "Email or username is required",
-        "password": "Password is required"
+        credential: 'Email or username is required',
+        password: 'Password is required'
       }
     });
   }
 
   const user = await User.scope('withFullName').findOne({
     where: { email: credential },
-    attributes: ['id', 'firstName', 'lastName', 'email', 'hashedPassword'], // add hashedPassword to the attributes
+    attributes: ['id', 'firstName', 'lastName', 'email', 'hashedPassword'],
   });
 
   if (!user || !(await bcrypt.compare(password, user.hashedPassword.toString()))) {
-    return res.status(401).json({ message: "Invalid credentials" });
+    return res.status(401).json({ message: 'Invalid credentials' });
   }
 
   const token = await setTokenCookie(res, user);
 
-
-  let resObj = user.toSafeObject();
-
-  resObj.firstName = user.firstName;
-  resObj.lastName = user.lastName;
-
-  user.token = token;
-
-  const response = {
-    user: resObj
+  const safeUser = {
+    id: user.id,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    email: user.email,
+    username: user.username,
   };
 
-  res.json(response);
+  res.json({ user: safeUser, token });
 });
 
+// Logout route
+router.delete('/', (_req, res) => {
+  res.clearCookie('token');
+  return res.json({ message: 'Logout successful' });
+});
 
+// Restore session user route
+router.get('/', (req, res) => {
+  const { user } = req;
 
+  if (user) {
+    const safeUser = {
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      username: user.username,
+    };
 
-
-  // Log out
-router.delete(
-    '/',
-    (_req, res) => {
-      res.clearCookie('token');
-      return res.json({ message: 'success' });
-    }
-  );
-
-
-
-  // Restore session user
-router.get(
-    '/',
-    (req, res) => {
-      const { user } = req;
-      if (user) {
-        const safeUser = {
-          id: user.id,
-          firstName: user.firstName, // added
-          lastName: user.lastName,   // added
-          email: user.email,
-          username: user.username,
-        };
-        return res.json({
-          user: safeUser
-        });
-      } else return res.json({ user: null });
-    }
-  );
-
+    return res.json({ user: safeUser });
+  } else {
+    return res.json({ user: null });
+  }
+});
 
 module.exports = router;
+
