@@ -16,14 +16,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/samanarana/AirBnB.git"
+    "url": "git+https://github.com/kenandcrys/authenticate-me.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/samanarana/AirBnB/issues"
-  },
-  "homepage": "https://github.com/samanarana/AirBnB#readme",
   "description": ""
 }
